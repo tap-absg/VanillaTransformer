@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>VanillaTransformer by cezarypiatek</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>VanillaTransformer</h1>
+        <h2>A simple generic text file transformer</h2>
+        <a href="https://github.com/cezarypiatek/VanillaTransformer" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="vanillatransformer" class="anchor" href="#vanillatransformer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>VanillaTransformer</h1>
+
+<p><a href="https://www.myget.org/"><img src="https://www.myget.org/BuildSource/Badge/vanillafeed?identifier=a5bad1f8-7580-4e5d-a7ad-2952d2c88719" alt="vanillafeed MyGet Build Status"></a></p>
+
+<p>VanillaTransformer is a simple generic text file transformer. It was designed for configuration transforming as an alternative for <a href="https://msdn.microsoft.com/en-us/library/dd465326%28v=vs.110%29.aspx">XML-Document-Transform</a> tool. Unlike XML-DT, it works with any kind of text file (not only XML) and is much simpler to use.</p>
+
+<h2>
+<a id="nuget-package" class="anchor" href="#nuget-package" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Nuget package</h2>
+
+<p><a href="https://www.nuget.org/packages/VanillaTransformer/">https://www.nuget.org/packages/VanillaTransformer/</a></p>
+
+<h2>
+<a id="how-to-use-it" class="anchor" href="#how-to-use-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use it.</h2>
+
+<ol>
+<li>Create pattern file</li>
+<li>Create values files</li>
+<li>Add transformation within build target</li>
+</ol>
+
+<p>Currently VanillaTransformer works as <strong>MsBuildTask</strong>. You can install it using nuget or add it manually to your *.csproj file as follows:</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">UsingTask</span> <span class="pl-e">TaskName</span>=<span class="pl-s"><span class="pl-pds">"</span>VanillaTransformerTask<span class="pl-pds">"</span></span> <span class="pl-e">AssemblyFile</span>=<span class="pl-s"><span class="pl-pds">"</span>VanillaTransformer.dll<span class="pl-pds">"</span></span> /&gt;</pre></div>
+
+<p>After that you can start adding transformation within given build target</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">Target</span> <span class="pl-e">Name</span>=<span class="pl-s"><span class="pl-pds">"</span>AfterBuild<span class="pl-pds">"</span></span>&gt;   
+    &lt;<span class="pl-ent">VanillaTransformerTask</span> <span class="pl-e">PatternFile</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.pattern.config<span class="pl-pds">"</span></span> <span class="pl-e">ValuesSource</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.values.dev.config<span class="pl-pds">"</span></span> <span class="pl-e">OutputPath</span>=<span class="pl-s"><span class="pl-pds">"</span>NHibernate.config<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">VanillaTransformerTask</span> <span class="pl-e">PatternFile</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.pattern.config<span class="pl-pds">"</span></span> <span class="pl-e">ValuesSource</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.values.test.config<span class="pl-pds">"</span></span> <span class="pl-e">OutputPath</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Transformed\NHibernate.Test.config<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">VanillaTransformerTask</span> <span class="pl-e">PatternFile</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.pattern.config<span class="pl-pds">"</span></span> <span class="pl-e">ValuesSource</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.values.staging.config<span class="pl-pds">"</span></span> <span class="pl-e">OutputPath</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Transformed\NHibernate.Staging.config<span class="pl-pds">"</span></span> /&gt;
+ &lt;/<span class="pl-ent">Target</span>&gt;</pre></div>
+
+<p><strong>Example Pattern file</strong></p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>utf-8<span class="pl-pds">"</span></span>?&gt;
+&lt;<span class="pl-ent">hibernate-configuration</span> <span class="pl-e">xmlns</span>=<span class="pl-s"><span class="pl-pds">"</span>urn:nhibernate-configuration-2.2<span class="pl-pds">"</span></span>&gt;
+  &lt;<span class="pl-ent">session-factory</span>&gt;
+    &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>connection.connection_string<span class="pl-pds">"</span></span>&gt;${ConnectionString}&lt;/<span class="pl-ent">property</span>&gt;
+    &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>connection.driver_class<span class="pl-pds">"</span></span>&gt;NHibernate.Driver.SqlClientDriver&lt;/<span class="pl-ent">property</span>&gt;
+    &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>dialect<span class="pl-pds">"</span></span>&gt;NHibernate.Dialect.MsSql2008Dialect&lt;/<span class="pl-ent">property</span>&gt;
+  &lt;/<span class="pl-ent">session-factory</span>&gt;
+&lt;/<span class="pl-ent">hibernate-configuration</span>&gt;</pre></div>
+
+<p><strong>Example Values file</strong></p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>utf-8<span class="pl-pds">"</span></span> ?&gt;
+&lt;<span class="pl-ent">root</span>&gt;
+  &lt;<span class="pl-ent">ConnectionString</span>&gt;Data Source=localhost;Database=TestDB;Integrated Security=true;&lt;/<span class="pl-ent">ConnectionString</span>&gt;
+&lt;/<span class="pl-ent">root</span>&gt;</pre></div>
+
+<p>You can also add transformation using powershell command provided with nuget package:</p>
+
+<div class="highlight highlight-source-powershell"><pre><span class="pl-c1">Add-Transformation</span> <span class="pl-s">"Configs\NHibernate.pattern.config"</span> <span class="pl-s">"Configs\NHibernate.values.dev.config"</span> <span class="pl-s">"NHibernate.config"</span></pre></div>
+
+<h2>
+<a id="transformation-configuration-file" class="anchor" href="#transformation-configuration-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Transformation Configuration File</h2>
+
+<p>Instead of adding each transformation by editing *.csproj file (what is very uncomfortable) you can create transformation configuration file with all transformations and add it once to project file. To register the configuration file add the following element into csproj file:</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">Target</span> <span class="pl-e">Name</span>=<span class="pl-s"><span class="pl-pds">"</span>AfterBuild<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">VanillaTransformerTask</span> <span class="pl-e">TransformConfiguration</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\transformations.xml<span class="pl-pds">"</span></span> /&gt;
+&lt;/<span class="pl-ent">Target</span>&gt;</pre></div>
+
+<p>or use PowerShell command</p>
+
+<div class="highlight highlight-source-powershell"><pre><span class="pl-c1">Add-TransformationConfig</span> <span class="pl-s">"Configs\transformations.xml"</span></pre></div>
+
+<p><strong>Example transformation configuration file</strong></p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>utf-8<span class="pl-pds">"</span></span> ?&gt;
+&lt;<span class="pl-ent">root</span>&gt;
+  &lt;<span class="pl-ent">transformationGroup</span> <span class="pl-e">pattern</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.pattern.config<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>NHibernate.values.dev.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>NHibernate.config<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>NHibernate.values.staging.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Transformed\NHibernate.config<span class="pl-pds">"</span></span> /&gt;
+  &lt;/<span class="pl-ent">transformationGroup</span>&gt;
+  &lt;<span class="pl-ent">transformationGroup</span> <span class="pl-e">pattern</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Web.pattern.config<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>Web.values.dev.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>Web.config<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>Web.values.staging.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Transformed\Web.config<span class="pl-pds">"</span></span> /&gt;
+  &lt;/<span class="pl-ent">transformationGroup</span>&gt;
+&lt;/<span class="pl-ent">root</span>&gt;</pre></div>
+
+<p>You can also define inline values for transformation instead of putting it in separated files.</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>utf-8<span class="pl-pds">"</span></span> ?&gt;
+&lt;<span class="pl-ent">root</span>&gt;
+  &lt;<span class="pl-ent">transformationGroup</span> <span class="pl-e">pattern</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.pattern.config<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>NHibernate.config<span class="pl-pds">"</span></span>&gt;
+        &lt;<span class="pl-ent">values</span>&gt;
+            &lt;<span class="pl-ent">ConnectionString</span>&gt;Data Source=localhost;Database=TestDB;Integrated Security=true;&lt;/<span class="pl-ent">ConnectionString</span>&gt;
+        &lt;/<span class="pl-ent">values</span>&gt;
+    &lt;/<span class="pl-ent">transformation</span>&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Transformed\NHibernate.config<span class="pl-pds">"</span></span>&gt;
+        &lt;<span class="pl-ent">values</span>&gt;
+            &lt;<span class="pl-ent">ConnectionString</span>&gt;Data Source=localhost;Database=StagingDB;Integrated Security=true;&lt;/<span class="pl-ent">ConnectionString</span>&gt;
+        &lt;/<span class="pl-ent">values</span>&gt;
+    &lt;/<span class="pl-ent">transformation</span>&gt;
+  &lt;/<span class="pl-ent">transformationGroup</span>&gt;
+&lt;/<span class="pl-ent">root</span>&gt;</pre></div>
+
+<h2>
+<a id="how-to-run-transformations" class="anchor" href="#how-to-run-transformations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to run transformations</h2>
+
+<p>By default VanilaTransformerTask is added to AfterBuild target, so everytime you build your project transformation should be run (unless you have condition attribute on AfterBuild target). You can also run the transformation using the following command</p>
+
+<div class="highlight highlight-source-powershell"><pre><span class="pl-c1">Invoke-Transformations</span></pre></div>
+
+<p>This will search for all VanillaTransformerTask inside the AfterBuild target and run it. If you don't want to run all the transformations, you can specify file with transformations (Transformation Configuration File) to run</p>
+
+<div class="highlight highlight-source-powershell"><pre><span class="pl-c1">Invoke-Transformations</span> <span class="pl-k">-</span>ConfigFilePath transformations.xml</pre></div>
+
+<h2>
+<a id="bootstrapping-transformations" class="anchor" href="#bootstrapping-transformations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bootstrapping transformations</h2>
+
+<p>If you already have configurations files and you wan to add transformation for few evenronments (for example: dev, test, stag, prod) you can use the following command</p>
+
+<div class="highlight highlight-source-powershell"><pre><span class="pl-c1">Add-BoostrapConfig</span> <span class="pl-k">-</span>Enviroments dev<span class="pl-k">,</span> test<span class="pl-k">,</span> prep<span class="pl-k">,</span> prod <span class="pl-k">-</span>DefaultEnvironment dev <span class="pl-k">-</span>TransformationsOut TransformedConfigs</pre></div>
+
+<p>Add-BootstrapConfig command does the following:</p>
+
+<ol>
+<li><p>Search for config files inside your project directory (by default files with *.config extension, but you could change that by using -ConfigFilter parameter) It search only inside the project main directory (you can use -Recurse parameter to search also in subdirectories)</p></li>
+<li><p>For each file creates pattern file using original config file and adds values file for each environment. Result of transformation for DefaultEnviroment will override original config file. The rest of transformed files will be placed in directory pointed by  -TransformationsOut parameter.</p></li>
+<li><p>Creates transformations.xml file that describes all the transformations</p></li>
+<li><p>Adds VanillaTransformerTask to AfterBuild target.</p></li>
+</ol>
+
+<p>Sample project before bootstrapping</p>
+
+<p><img src="https://raw.githubusercontent.com/cezarypiatek/VanillaTransformer/master/Doc/bootstrap_before.jpg" alt="Before bootstrapping"></p>
+
+<p>... and after bootsrapping</p>
+
+<p><img src="https://raw.githubusercontent.com/cezarypiatek/VanillaTransformer/master/Doc/bootstrap_after.jpg" alt="After bootstrapping"></p>
+
+<h2>
+<a id="post-transformations" class="anchor" href="#post-transformations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Post-Transformations</h2>
+
+<p>VanillaTransformer supports post-transformations which are apllied to transformed configuration in the form of pipeline.
+You can add post-transformations on any level of VanillaTransformer configuration (root, transformationGroup or transformation level) in the following manner:</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>utf-8<span class="pl-pds">"</span></span> ?&gt;
+&lt;<span class="pl-ent">root</span>&gt;
+  &lt;<span class="pl-ent">postTransformations</span>&gt;
+    &lt;<span class="pl-ent">add</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>StripXMLComments<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">add</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>ReFormatXML<span class="pl-pds">"</span></span> /&gt;
+  &lt;/<span class="pl-ent">postTransformations</span>&gt;
+  &lt;<span class="pl-ent">transformationGroup</span> <span class="pl-e">pattern</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.pattern.config<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.values.dev.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>NHibernate.config<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.values.prod.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Transformed\NHibernate.prod.config<span class="pl-pds">"</span></span> /&gt;
+  &lt;/<span class="pl-ent">transformationGroup</span>&gt;
+  &lt;<span class="pl-ent">transformationGroup</span> <span class="pl-e">pattern</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Web.pattern.config<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Web.values.dev.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>Web.config<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Web.values.prod.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Transformed\Web.prod.config<span class="pl-pds">"</span></span> /&gt;
+  &lt;/<span class="pl-ent">transformationGroup</span>&gt;
+&lt;/<span class="pl-ent">root</span>&gt;</pre></div>
+
+<p>You can also modify post-transformations set defined on higher level using "add" , "remove", and "clear" tags as follows</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>utf-8<span class="pl-pds">"</span></span> ?&gt;
+&lt;<span class="pl-ent">root</span>&gt;
+  &lt;<span class="pl-ent">postTransformations</span>&gt;
+    &lt;<span class="pl-ent">add</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>StripXMLComments<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">add</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>ReFormatXML<span class="pl-pds">"</span></span> /&gt;
+  &lt;/<span class="pl-ent">postTransformations</span>&gt;
+  &lt;<span class="pl-ent">transformationGroup</span> <span class="pl-e">pattern</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.pattern.config<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.values.dev.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>NHibernate.config<span class="pl-pds">"</span></span>&gt;
+      &lt;<span class="pl-ent">postTransformations</span>&gt;
+        &lt;<span class="pl-ent">remove</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>StripXMLComments<span class="pl-pds">"</span></span> /&gt;
+      &lt;/<span class="pl-ent">postTransformations</span>&gt;
+    &lt;/<span class="pl-ent">transformation</span>&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\NHibernate.values.prod.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Transformed\NHibernate.prod.config<span class="pl-pds">"</span></span> /&gt;
+  &lt;/<span class="pl-ent">transformationGroup</span>&gt;
+  &lt;<span class="pl-ent">transformationGroup</span> <span class="pl-e">pattern</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Web.pattern.config<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">postTransformations</span>&gt;
+      &lt;<span class="pl-ent">clear</span> /&gt;
+    &lt;/<span class="pl-ent">postTransformations</span>&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Web.values.dev.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>Web.config<span class="pl-pds">"</span></span> &gt;
+      &lt;<span class="pl-ent">postTransformations</span>&gt;
+        &lt;<span class="pl-ent">add</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>ReFormatXML<span class="pl-pds">"</span></span> /&gt;
+      &lt;/<span class="pl-ent">postTransformations</span>&gt;
+    &lt;/<span class="pl-ent">transformation</span>&gt;
+    &lt;<span class="pl-ent">transformation</span> <span class="pl-e">values</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Web.values.prod.config<span class="pl-pds">"</span></span> <span class="pl-e">output</span>=<span class="pl-s"><span class="pl-pds">"</span>Configs\Transformed\Web.prod.config<span class="pl-pds">"</span></span> /&gt;
+  &lt;/<span class="pl-ent">transformationGroup</span>&gt;
+&lt;/<span class="pl-ent">root</span>&gt;</pre></div>
+
+<p>Currently available post-transformations:</p>
+
+<ul>
+<li>StripXMLComments</li>
+<li>ReFormatXML</li>
+<li>DateTimeStamp</li>
+</ul>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/cezarypiatek/VanillaTransformer/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/cezarypiatek/VanillaTransformer/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/cezarypiatek/VanillaTransformer"></a> is maintained by <a href="https://github.com/cezarypiatek">cezarypiatek</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
